@@ -13,4 +13,4 @@ phases:
 
   build:
     commands:
-      - cdk deploy
+      - cdk deploy --require-approval never
