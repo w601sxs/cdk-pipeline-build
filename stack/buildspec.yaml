@@ -9,7 +9,7 @@ phases:
   pre_build:
     commands:
       - ls
-      - cdk synth
+      - cdk bootstrap
 
   build:
     commands:
