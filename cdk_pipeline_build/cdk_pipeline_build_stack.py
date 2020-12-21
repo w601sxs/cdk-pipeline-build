@@ -15,19 +15,19 @@ class CdkPipelineBuildStack(Stack):
         pipeline = CdkPipeline(self, "Pipeline",
             pipeline_name="MyAppPipeline",
             cloud_assembly_artifact=cloud_assembly_artifact,
-	      source_action=codepipeline_actions.S3SourceAction(
-		  bucket = "faropt-us-east-1",
-		  bucket_key="faropt-master.zip",
-		  action_name="GitHub",
-		  output=source_artifact),
-		  
-#             source_action=codepipeline_actions.GitHubSourceAction(
-#                 action_name="GitHub",
-#                 output=source_artifact,
-#                 trigger=codepipeline_actions.GitHubTrigger.POLL,
-#                 # Replace these with your actual GitHub project info
-#                 owner="aws-samples",
-#                 repo="faropt"),
+# 	      source_action=codepipeline_actions.S3SourceAction(
+# 		  bucket = "faropt-us-east-1",
+# 		  bucket_key="faropt-master.zip",
+# 		  action_name="GitHub",
+# 		  output=source_artifact),		  
+            source_action=codepipeline_actions.GitHubSourceAction(
+		oauth_token=SecretValue(value="None"),
+                action_name="GitHub",
+                output=source_artifact,
+                trigger=codepipeline_actions.GitHubTrigger.POLL,
+                # Replace these with your actual GitHub project info
+                owner="aws-samples",
+                repo="faropt"),
 		synth_action=SimpleSynthAction.standard_npm_synth(
                 source_artifact=source_artifact,
                 cloud_assembly_artifact=cloud_assembly_artifact,
