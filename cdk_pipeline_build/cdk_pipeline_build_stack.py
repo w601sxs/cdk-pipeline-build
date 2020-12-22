@@ -15,13 +15,19 @@ class CdkPipelineBuildStack(Stack):
 	bucket = _s3.Bucket(self,'bucket')
         
 	pipeline = CdkPipeline(self, "Pipeline",
-            pipeline_name="MyAppPipeline",
-            cloud_assembly_artifact=cloud_assembly_artifact,
-	      source_action=codepipeline_actions.S3SourceAction(
-		  bucket = bucket.bucket_name,
-		  bucket_key="faropt-master.zip",
-		  action_name="S3",
-		  output=source_artifact),		  
+			       pipeline_name="MyAppPipeline",
+			       cloud_assembly_artifact=cloud_assembly_artifact,
+			       source_action=codepipeline_actions.S3SourceAction(
+				       bucket = bucket.bucket_name,
+				       bucket_key="faropt-master.zip",
+				       action_name="S3",
+				       output=source_artifact),		  
+			       synth_action=SimpleSynthAction.standard_npm_synth(
+				       source_artifact=source_artifact,
+				       cloud_assembly_artifact=cloud_assembly_artifact,
+				       build_command="cdk synth")
+			      )
+
 #             source_action=codepipeline_actions.GitHubSourceAction(
 # 		oauth_token=SecretValue(value="None"),
 #                 action_name="GitHub",
@@ -30,10 +36,3 @@ class CdkPipelineBuildStack(Stack):
 #                 # Replace these with your actual GitHub project info
 #                 owner="aws-samples",
 #                 repo="faropt"),
-	    synth_action=SimpleSynthAction.standard_npm_synth(
-                source_artifact=source_artifact,
-                cloud_assembly_artifact=cloud_assembly_artifact,
-                # Use this if you need a build step (if you're not using ts-node
-                # or if you have TypeScript Lambdas that need to be compiled).
-                build_command="cdk synth")
-        )
